@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo Bucket</title>
+
+    <!-- Customize the manifest options -->
+    <meta name="manifest.default_icon" content="/icon.png">
+    <meta name="manifest.open_at_install" content="false">
+
+    <!-- Google Fonts: Lumina Scraper System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!-- App bundle -->
+    <script src="/interceptor.js"></script>
+    <script src="/dotlottie-player.js"></script>
+    <script type="module" crossorigin src="/chunks/sidepanel-DUsyKUuk.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/sidepanel-CFILspQI.css">
+
+    <style>
+    /* ================================================================
+       MapLeadr DESIGN SYSTEM — CSS OVERRIDE LAYER
+       Transforms the old dark-blue/yellow theme to dark/green (var(--lm-primary))
+       ================================================================ */
+
+    /* ---------- CSS Variables (Stitch Design Tokens) ---------- */
+    :root {
+      --lm-primary: #EF4444; /* Free Red */
+      --lm-primary-rgb: 239, 68, 68;
+      --lm-primary-hover: #F87171;
+      --lm-on-primary: #ffffff; /* White text on Red */
+      --lm-primary-dim: rgba(var(--lm-primary-rgb), 0.15);
+      --lm-surface-0: rgba(13, 20, 29, 0.85); /* Base Layer */
+      --lm-surface-1: rgba(25, 32, 41, 0.65); /* Middle Layer */
+      --lm-surface-2: rgba(46, 53, 63, 0.4);  /* Top Layer */
+      --lm-on-surface: #dce3f0;
+      --lm-on-surface-variant: #bccbb9;
+      --lm-border: rgba(255,255,255,0.1);
+      --lm-border-hover: rgba(255,255,255,0.2);
+      --lm-font-body: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+      --lm-font-heading: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+      --lm-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --lm-radius: 8px;
+      --lm-radius-lg: 16px;
+      --lm-radius-full: 9999px;
+    }
+
+    /* Premium Pro Theme Override */
+    body.is-premium {
+      /* Pro Green */
+      --lm-primary: #1DB954; 
+      --lm-primary-rgb: 29, 185, 84;
+      --lm-primary-hover: #53e076; 
+      --lm-on-primary: #000000; /* Black text on Green */
+    }
+
+    /* Global Transition for Theme Switching */
+    *, *::before, *::after {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, fill 0.3s ease !important;
+    }
+
+    /* ---------- Base Reset ---------- */
+    html, body {
+      background-color: transparent !important;
+      color: var(--lm-on-surface) !important;
+      font-family: var(--lm-font-body) !important;
+      margin: 0; padding: 0;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+    }
+
+    /* ---------- WebGL Shader Background ---------- */
+    #lm-shader-bg {
+      position: fixed; inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.4; /* Slightly more opaque for the Stitch aesthetic */
+    }
+    #lm-shader-bg canvas {
+      display: block; width: 100%; height: 100%;
+    }
+
+    /* ---------- Root container layout ---------- */
+    #root {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0px !important; /* Remove outer margin/grey border container */
+      box-sizing: border-box;
+    }
+    #root > div {
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100% !important;
+      background: transparent !important;
+      border-radius: 0px !important; /* Square corners for full screen layout */
+      border: none !important;
+      overflow: hidden;
+    }
+
+    /* ---------- HIDE: Lead Sniper Branding Flash ---------- */
+    div.flex.items-center.gap-3:has(h1.text-white.font-black) {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+
+    /* ---------- HIDE: Free Trial bar, Upgrade button, 2Captcha, Footer ---------- */
+    /* Free Trial / Upgrade header bar */
+    div[class*="bg-[#0f172a]"][class*="px-5"][class*="py-3"][class*="shrink-0"][class*="z-20"] {
+      display: none !important;
+    }
+    /* 2Captcha button */
+    button[title="Configure 2Captcha"] { display: none !important; }
+    /* Footer / status bar (excluding pagination controls) */
+    div[class*="bg-[#020617]"][class*="px-4"][class*="py-3"][class*="shrink-0"]:not(:has(select)) {
+      display: none !important;
+    }
+
+    /* ---------- Main content area: fill height ---------- */
+    #root > div > div:not([class*="shrink-0"]) {
+      flex-grow: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow-y: auto !important;
+      padding: 8px; /* Internal rhythm */
+    }
+
+    /* ---------- Global Semantic Classes ---------- */
+    .lm-bg-surface-0 {
+      background-color: var(--lm-surface-0) !important;
+      backdrop-filter: blur(40px) !important;
+      -webkit-backdrop-filter: blur(40px) !important;
+      border: none !important; /* Remove outer container border outline */
+      border-radius: 0px !important; /* Square corners */
+    }
+    .lm-bg-surface-1 {
+      background-color: var(--lm-surface-1) !important;
+      backdrop-filter: blur(40px) !important;
+      -webkit-backdrop-filter: blur(40px) !important;
+      border: 1px solid var(--lm-border) !important;
+      border-radius: var(--lm-radius-lg) !important;
+      margin-bottom: 8px; /* Vertical rhythm */
+    }
+    .lm-bg-surface-2 {
+      background-color: var(--lm-surface-2) !important;
+      backdrop-filter: blur(40px) !important;
+      -webkit-backdrop-filter: blur(40px) !important;
+      border-radius: var(--lm-radius) !important;
+      border-top: 1px solid rgba(255,255,255,0.15) !important; /* Subtle inner glow */
+    }
+
+    .lm-bg-primary { background-color: var(--lm-primary) !important; }
+    .lm-hover-bg-primary:hover { background-color: var(--lm-primary-hover) !important; }
+    .lm-text-primary { color: var(--lm-primary) !important; }
+    .lm-hover-text-primary:hover { color: var(--lm-primary-hover) !important; }
+    .lm-border-primary { border-color: var(--lm-primary) !important; }
+
+    .lm-border { border-color: var(--lm-border) !important; }
+
+    /* Text colors */
+    .text-white, .text-gray-200 { color: var(--lm-on-surface) !important; }
+    .text-gray-400 { color: var(--lm-on-surface-variant) !important; }
+    .text-gray-500 { color: rgba(160,160,160,0.7) !important; }
+    
+    [class*="text-yellow"],
+    [class*="text-[#fbbf24]"],
+    [class*="text-[var(--lm-primary)]"] {
+      color: var(--lm-primary) !important;
+    }
+
+    /* ---------- Typography ---------- */
+    h1, h2, h3, [class*="font-black"], [class*="font-extrabold"], [class*="font-bold"] {
+      font-family: var(--lm-font-heading) !important;
+    }
+    [class*="font-mono"] {
+      font-family: var(--lm-font-mono) !important;
+    }
+
+    /* ---------- Buttons ---------- */
+    /* Primary action buttons (Start, etc.) */
+    button[class*="bg-[#fbbf24]"],
+    button[class*="bg-yellow"] {
+      background-color: var(--lm-primary) !important;
+      color: var(--lm-on-primary) !important;
+      border-radius: var(--lm-radius-full) !important;
+      font-family: var(--lm-font-body) !important;
+      font-weight: 500 !important;
+      border: none !important;
+      box-shadow: 0 4px 14px rgba(var(--lm-primary-rgb), 0.2) !important;
+      transition: all 0.2s ease !important;
+    }
+    button[class*="bg-[var(--lm-primary)]"]:hover,
+    button[class*="bg-yellow"]:hover {
+      background-color: var(--lm-primary-hover) !important;
+      transform: translateY(-1px) !important;
+    }
+    button[class*="bg-[var(--lm-primary)]"]:active,
+    button[class*="bg-yellow"]:active {
+      transform: scale(0.97) !important;
+    }
+
+    /* Secondary / outline buttons */
+    button[class*="bg-[#1e293b]"],
+    button[class*="bg-[#334155]"] {
+      background-color: var(--lm-surface-1) !important;
+      border: 1px solid var(--lm-border) !important;
+      border-radius: var(--lm-radius) !important;
+      transition: all 0.2s ease !important;
+    }
+    button[class*="bg-[#1e293b]"]:hover,
+    button[class*="bg-[#334155]"]:hover {
+      background-color: var(--lm-surface-2) !important;
+      border-color: var(--lm-border-hover) !important;
+    }
+
+    /* ---------- Inputs ---------- */
+    input, textarea, select {
+      background-color: var(--lm-surface-2) !important;
+      border: 1px solid var(--lm-border) !important;
+      border-radius: var(--lm-radius) !important;
+      color: var(--lm-on-surface) !important;
+      font-family: var(--lm-font-body) !important;
+      transition: all 0.2s ease !important;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--lm-primary) !important;
+      box-shadow: 0 0 0 1px var(--lm-primary) !important;
+      outline: none !important;
+    }
+    input::placeholder, textarea::placeholder {
+      color: rgba(160, 160, 160, 0.5) !important;
+    }
+
+    /* ---------- Cards / Panels ---------- */
+    [class*="rounded"][class*="bg-[#1e293b]"],
+    [class*="rounded"][class*="bg-[#0f172a]"] {
+      background-color: var(--lm-surface-1) !important;
+      border: 1px solid var(--lm-border) !important;
+      border-radius: var(--lm-radius-lg) !important;
+    }
+
+    /* ---------- Stat cards hover effect ---------- */
+    [class*="bg-[#1e293b]"][class*="rounded"]:hover {
+      background-color: var(--lm-surface-2) !important;
+    }
+
+    /* ---------- Progress bars ---------- */
+    [class*="bg-[#fbbf24]"][class*="h-full"],
+    [class*="bg-[#fbbf24]"][class*="h-1"],
+    div[class*="h-1.5"] > div[class*="bg-[#fbbf24]"] {
+      background-color: var(--lm-primary) !important;
+      box-shadow: 0 0 8px var(--lm-primary) !important;
+    }
+
+    /* ---------- Scrollbar ---------- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+    /* ---------- Fix Button Colors ---------- */
+    button[class*="bg-[#fbbf24]"] *,
+    button[class*="bg-yellow"] * {
+      color: var(--lm-on-primary) !important;
+    }
+
+    /* Circular Play/Pause Buttons */
+    .lm-circle-btn {
+      width: 50px !important;
+      height: 50px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: var(--lm-primary) !important;
+      box-shadow: 0 4px 15px rgba(var(--lm-primary-rgb), 0.4) !important;
+      padding: 0 !important;
+      margin: 0 auto !important;
+    }
+    .lm-circle-btn svg, .lm-circle-btn span {
+      color: var(--lm-on-primary) !important;
+      font-size: 24px !important;
+    }
+
+    /* ---------- Fix Spinner Flash ---------- */
+    div:has(> div.absolute.inset-0.flex.flex-col) > svg {
+      display: none !important;
+    }
+
+    /* ---------- MapLeadr AI Animation & Floating ---------- */
+    body:not(.is-premium) .lm-radar-lottie {
+      filter: hue-rotate(-107deg) saturate(1.5) !important;
+    }
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 15px var(--lm-primary-dim), 0 0 30px var(--lm-primary-dim); opacity: 0.8; }
+      50% { box-shadow: 0 0 25px var(--lm-primary), 0 0 50px var(--lm-primary-dim); opacity: 1; transform: scale(1.05); }
+      100% { box-shadow: 0 0 15px var(--lm-primary-dim), 0 0 30px var(--lm-primary-dim); opacity: 0.8; }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .lm-float-anim {
+      animation: float 4s ease-in-out infinite;
+    }
+    .lm-float-anim:nth-child(1) { animation-delay: 0s; }
+    .lm-float-anim:nth-child(2) { animation-delay: -1.33s; }
+    .lm-float-anim:nth-child(3) { animation-delay: -2.66s; }
+
+    /* ---------- MapLeadr AI Animation ---------- */
+    @keyframes lm-pulse {
+      0% { transform: scale(0.8); opacity: 0.5; filter: blur(20px); }
+      50% { transform: scale(1.2); opacity: 0.8; filter: blur(30px); }
+      100% { transform: scale(0.8); opacity: 0.5; filter: blur(20px); }
+    }
+    @keyframes lm-rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .lm-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 150px; height: 150px;
+      margin-top: -120px; margin-left: -75px;
+      background: radial-gradient(circle, var(--lm-primary) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: lm-pulse 3s infinite ease-in-out, lm-rotate 10s infinite linear;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ---------- Animated Gradient Text ---------- */
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .lm-animated-text {
+      background: linear-gradient(270deg, #1ed760, var(--lm-primary), #108539, #1ed760);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient-shift 5s ease infinite;
+      font-weight: 800;
+    }
+
+    /* ---------- Animations ---------- */
+    @keyframes lm-pulse-accent {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(var(--lm-primary-rgb), 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(var(--lm-primary-rgb), 0); }
+    }
+    [class*="animate-ping"] {
+      background-color: var(--lm-primary) !important;
+    }
+    [class*="bg-green-500"], [class*="bg-green-400"], [class*="bg-emerald-400"] {
+      background-color: var(--lm-primary) !important;
+    }
+
+    /* ---------- Glow effects: yellow → green ---------- */
+    [class*="shadow-[0_0"][class*="fbbf24"] {
+      box-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.3) !important;
+    }
+
+    /* ---------- Selection color ---------- */
+    ::selection {
+      background-color: rgba(var(--lm-primary-rgb), 0.3);
+      color: #fff;
+    }
+
+    /* ---------- Responsive: fill available space ---------- */
+    @media (max-height: 600px) {
+      #root > div > div:not([class*="shrink-0"]) {
+        overflow-y: auto !important;
+      }
+    }
+
+    /* ---------- Loading Overlay ---------- */
+    #initial-loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(13, 35, 20, 0.98);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--lm-on-surface);
+      font-family: var(--lm-font-body);
+      text-align: center;
+      padding: 20px;
+    }
+    #loading-news {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      max-width: 80%;
+      line-height: 1.4;
+      color: var(--lm-primary);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    /* CSS Loader */
+    .lm-ball {
+      width: 16px; height: 16px; border-radius: 50%;
+      animation: lm-bounce 0.5s alternate infinite ease-in-out;
+    }
+    .lm-ball:nth-child(2) { animation-delay: 0.15s; }
+    .lm-ball:nth-child(3) { animation-delay: 0.3s; }
+    .lm-ball:nth-child(4) { animation-delay: 0.45s; }
+    @keyframes lm-bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-20px); }
+    }
+    /* Text Glow Animations */
+    @keyframes lm-text-glow {
+      from { text-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.5), 0 0 20px rgba(var(--lm-primary-rgb), 0.3); }
+      to { text-shadow: 0 0 15px rgba(var(--lm-primary-rgb), 1), 0 0 30px rgba(var(--lm-primary-rgb), 0.8), 0 0 40px rgba(var(--lm-primary-rgb), 0.4); }
+    }
+    @keyframes lm-text-glow-sub {
+      from { text-shadow: 0 0 5px rgba(var(--lm-primary-rgb), 0.3); }
+      to { text-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.8), 0 0 15px rgba(var(--lm-primary-rgb), 0.5); }
+    }
+    @keyframes lm-gentle-bob {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-3px); }
+    }
+    @keyframes lm-blink-fast {
+      0% { background-color: #ffffff; box-shadow: 0 0 6px #ffffff; }
+      100% { background-color: var(--lm-primary); box-shadow: 0 0 12px var(--lm-primary); }
+    }
+
+    /* ================================================================
+       Geo Bucket — Upgraded lead cards & radar counter overlay styles
+       ================================================================ */
+    .lm-card-number {
+      position: absolute !important;
+      top: 12px !important;
+      right: 12px !important;
+      background: rgba(var(--lm-primary-rgb), 0.1) !important;
+      border: 1px solid rgba(var(--lm-primary-rgb), 0.3) !important;
+      color: var(--lm-primary) !important;
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      padding: 2px 6px !important;
+      border-radius: 6px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+      font-family: var(--lm-font-body) !important;
+      pointer-events: none !important;
+      line-height: 1.2 !important;
+      z-index: 5 !important;
+    }
+
+    .lm-card-gmb-btn {
+      position: absolute !important;
+      top: 36px !important;
+      right: 12px !important;
+      z-index: 10 !important;
+      padding: 4px 8px !important;
+      border-radius: 6px !important;
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      transition: all 0.2s ease !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-decoration: none !important;
+      line-height: 1.2 !important;
+    }
+    .lm-card-gmb-btn:not(.visited) {
+      background: rgba(var(--lm-primary-rgb), 0.15) !important;
+      border: 1px solid var(--lm-primary) !important;
+      color: var(--lm-primary) !important;
+      text-shadow: 0 0 8px var(--lm-primary) !important;
+      box-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.2) !important;
+    }
+    .lm-card-gmb-btn.visited {
+      background: rgba(251, 191, 36, 0.15) !important;
+      border: 1px solid var(--lm-primary) !important;
+      color: var(--lm-primary) !important;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.3) !important;
+    }
+    .lm-card-gmb-btn:not(.visited):hover {
+      background: var(--lm-primary) !important;
+      color: var(--lm-on-primary) !important;
+      box-shadow: 0 0 15px rgba(var(--lm-primary-rgb), 0.5) !important;
+      transform: translateY(-1px) !important;
+    }
+    .lm-card-gmb-btn.visited:hover {
+      background: var(--lm-primary) !important;
+      color: var(--lm-on-primary) !important;
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.6) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .lm-card-capsule {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 8px 12px !important;
+      border-radius: 10px !important;
+      background: rgba(255, 255, 255, 0.02) !important;
+      border: 1px solid rgba(255, 255, 255, 0.04) !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      margin-bottom: 6px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .lm-card-capsule.clickable {
+      cursor: copy !important;
+    }
+    .lm-card-capsule.clickable:hover {
+      background: rgba(var(--lm-primary-rgb), 0.08) !important;
+      border-color: rgba(var(--lm-primary-rgb), 0.3) !important;
+      box-shadow: 0 0 12px rgba(var(--lm-primary-rgb), 0.05) !important;
+    }
+    .lm-card-capsule.clickable:hover svg {
+      opacity: 1 !important;
+      transform: scale(1.08) !important;
+    }
+    .lm-card-capsule.clickable:hover span {
+      color: #ffffff !important;
+    }
+    .lm-card-capsule svg {
+      color: var(--lm-primary) !important;
+      opacity: 0.9 !important;
+      transition: all 0.2s ease !important;
+      flex-shrink: 0 !important;
+    }
+    .lm-card-capsule span {
+      color: #e2e8f0 !important;
+      transition: color 0.2s ease !important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+    }
+
+    /* Radar circle container layout */
+    .lm-radar-circle {
+      position: relative !important;
+      width: 170px !important;
+      height: 170px !important;
+      border-radius: 50% !important;
+      background: rgba(13, 20, 29, 0.4) !important;
+      border: 1px solid rgba(var(--lm-primary-rgb), 0.15) !important;
+      box-shadow: 0 0 30px rgba(var(--lm-primary-rgb), 0.08), inset 0 0 20px rgba(var(--lm-primary-rgb), 0.12) !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin-bottom: 0px !important;
+    }
+
+    /* Concentric rings inside radar */
+    .lm-radar-ring {
+      position: absolute !important;
+      border-radius: 50% !important;
+      border: 1px dashed rgba(var(--lm-primary-rgb), 0.15) !important;
+      pointer-events: none !important;
+    }
+    .lm-radar-ring-1 { width: 130px !important; height: 130px !important; }
+    .lm-radar-ring-2 { width: 90px !important; height: 90px !important; }
+    .lm-radar-ring-3 { width: 50px !important; height: 50px !important; border-style: solid !important; border-color: rgba(var(--lm-primary-rgb), 0.08) !important; }
+
+    /* The sweeping radar line */
+    .lm-radar-sweep {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      width: 170px !important;
+      height: 170px !important;
+      margin-top: -85px !important;
+      margin-left: -85px !important;
+      border-radius: 50% !important;
+      background: conic-gradient(from 0deg, rgba(var(--lm-primary-rgb), 0.4) 0deg, rgba(var(--lm-primary-rgb), 0.1) 45deg, transparent 180deg) !important;
+      animation: lm-radar-rotate 3s linear infinite !important;
+      z-index: 2 !important;
+      transform-origin: center center !important;
+      pointer-events: none !important;
+    }
+
+    /* Blips (flashing targets) inside the radar grid */
+    .lm-radar-blip {
+      position: absolute !important;
+      width: 6px !important;
+      height: 6px !important;
+      background-color: var(--lm-primary) !important;
+      border-radius: 50% !important;
+      box-shadow: 0 0 10px var(--lm-primary), 0 0 20px var(--lm-primary) !important;
+      animation: lm-blip-pulse 2s infinite ease-in-out !important;
+      pointer-events: none !important;
+    }
+    .lm-radar-blip-1 { top: 30px !important; left: 50px !important; animation-delay: 0.3s !important; }
+    .lm-radar-blip-2 { bottom: 45px !important; right: 40px !important; animation-delay: 0.9s !important; }
+    .lm-radar-blip-3 { top: 75px !important; right: 30px !important; animation-delay: 1.4s !important; }
+
+    /* Pulse animation for blips */
+    @keyframes lm-blip-pulse {
+      0% { transform: scale(0.6); opacity: 0.2; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.6); opacity: 0.2; }
+    }
+
+    @keyframes lm-radar-rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* The lock reticle in center */
+    .lm-radar-crosshair {
+      position: absolute !important;
+      width: 12px !important;
+      height: 12px !important;
+      border: 1px solid rgba(var(--lm-primary-rgb), 0.4) !important;
+      border-radius: 50% !important;
+      z-index: 3 !important;
+      pointer-events: none !important;
+    }
+    .lm-radar-crosshair::before, .lm-radar-crosshair::after {
+      content: '' !important;
+      position: absolute !important;
+      background: rgba(var(--lm-primary-rgb), 0.4) !important;
+    }
+    .lm-radar-crosshair::before {
+      top: 50% !important; left: -6px !important; right: -6px !important; height: 1px !important;
+    }
+    .lm-radar-crosshair::after {
+      left: 50% !important; top: -6px !important; bottom: -6px !important; width: 1px !important;
+    }
+
+    /* Overrides for React scanning status circle spans */
+    div:has(> div.absolute.inset-0.flex.flex-col) {
+      position: relative !important;
+      width: 220px !important;
+      height: 220px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    div:has(> div.absolute.inset-0.flex.flex-col) > div.absolute.inset-0.flex.flex-col {
+      position: absolute !important;
+      inset: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      pointer-events: none !important;
+      background: transparent !important;
+      z-index: 10 !important;
+    }
+
+    div:has(> div.absolute.inset-0.flex.flex-col) span.text-6xl {
+      font-family: var(--lm-font-mono) !important;
+      font-size: 32px !important;
+      font-weight: 700 !important;
+      color: #ffffff !important;
+      text-shadow: 0 0 10px var(--lm-primary), 0 0 20px rgba(var(--lm-primary-rgb), 0.5) !important;
+      letter-spacing: -0.5px !important;
+      animation: lm-counter-pulse 1.5s ease-in-out infinite alternate !important;
+      margin-top: 10px !important;
+    }
+
+    div:has(> div.absolute.inset-0.flex.flex-col) span.text-gray-400 {
+      font-size: 8px !important;
+      font-weight: 800 !important;
+      letter-spacing: 2px !important;
+      text-transform: uppercase !important;
+      color: rgba(var(--lm-primary-rgb), 0.8) !important;
+      margin-top: 2px !important;
+      text-shadow: 0 0 5px rgba(var(--lm-primary-rgb), 0.3) !important;
+    }
+
+    @keyframes lm-counter-pulse {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1.03); }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Initial Loading Screen -->
+    <div id="initial-loading-overlay">
+        <dotlottie-player id="lottie-player" src="/sonar_radar.lottie" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        <div id="loading-news">Initializing Geo Bucket Engine...</div>
+    </div>
+    <script src="/loading.js"></script>
+
+
+    <!-- WebGL Shader Background -->
+    <div id="lm-shader-bg">
+      <canvas id="lm-shader-canvas"></canvas>
+    </div>
+    <script src="/shader.js"></script>
+
+    <!-- React App Root -->
+    <div id="root"></div>
+    <!-- MapLeadr AI Extension Logic -->
+    <script src="/siri.js" type="module"></script>
+    </body>
+</html>
+
+

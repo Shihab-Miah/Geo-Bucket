@@ -1,0 +1,1 @@
+import{a as e,t}from"./decorate-C0oFmnNg.js";import{BaseDotLottieWC as n}from"./base-dotlottie-wc.js";import{n as r}from"./dist-BMnS_qxa.js";let i=class extends n{_createDotLottieInstance(t){return new r(t)}};i=t([e("dotlottie-wc")],i);export{i as DotLottieWC};

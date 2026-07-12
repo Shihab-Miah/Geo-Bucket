@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "Geo Bucket",
+  "description": "Uncover hidden B2B leads on Google Maps. Instantly scrape emails, phones, and websites to supercharge your outreach pipeline.",
+  "version": "7.1.2",
+  "icons": {
+    "16": "icons/16x16.png",
+    "32": "icons/32x32.png",
+    "48": "icons/48x48.png",
+    "64": "icons/64x64.png",
+    "128": "icons/128x128.png",
+    "256": "icons/256x256.png",
+    "512": "icons/512x512.png"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "webRequest",
+    "activeTab",
+    "tabs",
+    "scripting",
+    "sidePanel",
+    "identity",
+    "identity.email"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://2captcha.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "resources": [
+        "*.gif",
+        "*.svg",
+        "*.json",
+        "interceptor.js"
+      ]
+    }
+  ],
+  "oauth2": {
+    "client_id": "206685804402-cv7fq9cfq8518ilsuh3kt538nqqfjuo5.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/maps/*",
+        "https://*/sorry/index*"
+      ],
+      "js": [
+        "content-scripts/c-app.js"
+      ]
+    }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "https://*.geobucket.com/*",
+      "http://localhost/*",
+      "http://127.0.0.1/*"
+    ]
+  }
+}

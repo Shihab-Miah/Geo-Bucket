@@ -1,0 +1,1 @@
+chrome.runtime.onMessageExternal.addListener((e,n,s)=>{n.url&&(n.url.includes("localhost")||n.url.includes("127.0.0.1")||n.url.includes("geobucket.com"))&&"GEO_BUCKET_PING"===e.action&&s({status:"installed",version:chrome.runtime.getManifest().version})});
