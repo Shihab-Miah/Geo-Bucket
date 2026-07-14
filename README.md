@@ -4,9 +4,7 @@
 
 # Geo Bucket
 
-**Stop scrolling. Start closing.**
-
-Extract verified business leads from Google Maps in seconds — emails, phone numbers, websites, and social profiles — all from one powerful Chrome extension.
+Lead scraper for Google Maps. Pulls emails, phones, websites, and social links from business listings and exports them as CSV or XLSX.
 
 [![Version](https://img.shields.io/badge/v7.1.2-stable-1DB954?style=flat-square&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
 [![Chrome](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat-square&logo=googlechrome&logoColor=white&labelColor=0A0A0A)](https://github.com/Shihab-Miah/Geo-Bucket)
@@ -14,132 +12,110 @@ Extract verified business leads from Google Maps in seconds — emails, phone nu
 
 <br />
 
-<img src="assets/banner.png" alt="Geo Bucket — Radar Intelligence for Google Maps" width="720" />
+<img src="assets/banner.png" alt="Geo Bucket" width="720" />
 
 </div>
 
 <br />
 
-## The Problem
+## What is this?
 
-Every B2B sales team, agency, and freelancer runs into the same wall: **finding the right people to sell to is slow, manual, and painful.** You open Google Maps, search for a niche, then click into each business one by one — copying names, hunting for emails on their website, checking if they have a Facebook page. It takes hours. You end up with a messy spreadsheet and half the data is missing.
+Geo Bucket is a Chrome extension that scrapes Google Maps search results. You search for something like "dentists in Dallas" or "restaurants near me," open the side panel, and hit start. It goes through each listing and extracts:
 
-**Geo Bucket eliminates that entire workflow.**
+- Business name, address, and category
+- Phone number
+- Website URL
+- Email addresses (crawled from the business website)
+- Star rating and review count
+- Social media links (Facebook, Instagram, etc.) when available
 
-You search on Google Maps like you normally would. Click start. Geo Bucket sweeps through every listing on the page and pulls out structured, clean data — business name, phone, email, website, address, rating, reviews — ready to drop into your CRM or cold outreach tool.
+When it's done, you export everything as a `.csv` or `.xlsx` file. That's it.
+
+I built this because I was doing cold outreach for B2B clients and got tired of manually clicking through Maps listings one by one. Copying names into spreadsheets, hunting for emails on websites, checking for social pages. It was taking hours for maybe 50 leads. Geo Bucket does the same thing in a few minutes.
 
 <br />
 
-## What It Extracts
+## How it works
 
-| Data Point | Source |
+The extension runs entirely in your browser. There's no server-side scraping, no proxy network, nothing shady. It reads the same publicly visible data you'd see if you clicked through each listing yourself, just faster.
+
+A few things worth mentioning:
+
+**Rate limiting** — It doesn't blast through results. There are built-in randomized delays between actions so it behaves like a normal user browsing Maps. This keeps your account safe.
+
+**Email crawling** — Most Maps listings don't show email addresses directly. Geo Bucket follows the website link on each listing and scans the page for email addresses, contact forms, and social links. This is where most of the value comes from.
+
+**De-duplication** — If you run multiple scraping sessions (different searches, different areas), it tracks what you've already collected and removes duplicates automatically.
+
+**Local processing** — Your data never leaves your machine. Exports are generated client-side in the browser. Nothing gets uploaded anywhere.
+
+<br />
+
+## Installation
+
+1. Click the green **Code** button above and select **Download ZIP**
+2. Unzip the folder somewhere on your computer
+3. Open `chrome://extensions` in Chrome
+4. Turn on **Developer Mode** (top right toggle)
+5. Click **Load Unpacked** and point it to the unzipped folder
+6. Pin Geo Bucket to your toolbar
+
+To run your first scrape: open Google Maps, search for a business type + location, click the Geo Bucket icon to open the side panel, and press Start.
+
+<br />
+
+## Who is this for?
+
+Mostly people doing outbound sales, lead gen, or prospecting:
+
+- **Agency owners** who need prospect lists for clients. Search for a niche + city, get back a clean spreadsheet with contact info.
+- **Sales teams** filling their pipeline. Filter by rating and review count to focus on established businesses, export directly into whatever CRM you use.
+- **Freelancers** looking for clients. Find businesses in your industry that have websites and active reviews (which usually means they understand the value of the services you're selling).
+
+It also works well for market research, competitive analysis, or just finding a list of businesses in a specific area.
+
+<br />
+
+## What it extracts
+
+| Field | Details |
 | :--- | :--- |
-| 📧 **Email Addresses** | Deep-crawled from business websites linked on their Maps listing |
-| 📞 **Phone Numbers** | Pulled directly from Google Maps metadata |
-| 🌐 **Website URLs** | Extracted from the listing's info panel |
-| 📍 **Full Address** | Street address, city, state, zip |
-| ⭐ **Rating & Reviews** | Star rating and total review count for lead scoring |
-| 🏷️ **Business Category** | The Google-assigned business type (Plumber, Restaurant, etc.) |
-| 📱 **Social Media** | Facebook, Instagram, and other linked profiles when available |
+| Business Name | As listed on Google Maps |
+| Phone | From the Maps listing info panel |
+| Email | Crawled from the linked business website |
+| Website | Direct URL from the listing |
+| Address | Full street address |
+| Rating | Star rating + total review count |
+| Category | Google-assigned type (e.g., Plumber, Restaurant) |
+| Social Links | Facebook, Instagram, etc. when available |
 
 <br />
 
-## Core Capabilities
+## Tech details
 
-### ⚡ Hyper-Fast Extraction
-Scrape hundreds of business listings in minutes. Geo Bucket processes Maps results at machine speed while respecting rate limits to keep your account safe.
-
-### 🧠 Contact Intelligence
-Goes beyond what Maps shows on the surface. The engine crawls linked business websites to find hidden email addresses, social profiles, and contact forms that manual searching would miss.
-
-### 🛡️ Anti-Ban Architecture
-Built-in randomized delays and human-like interaction patterns prevent detection. You get the data without triggering Google's abuse systems.
-
-### 📊 One-Click Clean Exports
-Export your leads instantly as `.CSV` or `.XLSX` files. No reformatting needed — columns are clean, headers are labeled, and duplicates are already removed.
-
-### 🔄 Smart De-duplication
-The engine tracks what you have already scraped. Run multiple sessions across different searches and Geo Bucket automatically merges and de-duplicates your master list.
-
-<br />
-
-## Who Uses Geo Bucket
-
-<table>
-<tr>
-<td width="33%" valign="top">
-
-### 🏢 B2B Agencies
-
-Build hyper-targeted prospect lists for your clients. Search "dentists in Dallas" or "law firms in London" and walk away with a clean spreadsheet of decision-makers — complete with emails and phone numbers — in under five minutes.
-
-</td>
-<td width="33%" valign="top">
-
-### 💼 SaaS Sales Teams
-
-Fill your outbound pipeline with local businesses that match your ICP. Filter by category, rating, and review count to find businesses that are likely to convert, then export directly into your sales engagement tool.
-
-</td>
-<td width="33%" valign="top">
-
-### 🎯 Freelancers & Consultants
-
-Stop cold-pitching random businesses. Use Geo Bucket to find companies in your niche that actually have an online presence (and therefore understand the value of what you sell). Target businesses with websites, active reviews, and reachable contact info.
-
-</td>
-</tr>
-</table>
-
-<br />
-
-## Getting Started
-
-### Installation
-
-1. Click the green **Code** button above → **Download ZIP**
-2. Unzip the folder to a permanent location on your computer
-3. Open Chrome and go to `chrome://extensions`
-4. Enable **Developer Mode** (toggle in the top-right corner)
-5. Click **Load Unpacked** and select the unzipped `Geo-Bucket` folder
-6. Pin the extension to your toolbar — you are ready to go
-
-### First Scrape
-
-1. Open [Google Maps](https://maps.google.com)
-2. Search for any business category + location (e.g., *"Restaurants in Miami"*)
-3. Click the Geo Bucket icon in your toolbar to open the side panel
-4. Hit **Start** and watch the radar sweep through every listing
-5. When finished, click **Export** to download your leads as CSV or XLSX
-
-<br />
-
-## Tech Stack
-
-| Layer | Technology |
+| | |
 | :--- | :--- |
-| Runtime | Chrome Extension Manifest V3 |
-| UI | Custom glassmorphic design system with WebGL shader backgrounds |
-| Scraping Engine | Native DOM traversal + async interceptor pipeline |
-| Data Export | Client-side CSV/XLSX generation (no server upload) |
-| Auth | Google OAuth 2.0 Identity API |
-| Security | HMAC-SHA256 license verification, XOR-encrypted endpoints |
+| Platform | Chrome Extension (Manifest V3) |
+| UI | Custom design system, WebGL backgrounds |
+| Scraping | DOM traversal + async interceptor |
+| Export | Client-side CSV/XLSX generation |
+| Auth | Google OAuth 2.0 |
 
 <br />
 
-## Frequently Asked Questions
+## FAQ
 
-**Is this against Google's Terms of Service?**
-Geo Bucket operates entirely within your browser as a Chrome extension. It reads publicly visible information from the Google Maps interface — the same data any person could see by visiting the page manually.
+**Will this get my Google account banned?**
+It uses randomized timing and human-like patterns. I've been using it daily for months without issues. That said, don't scrape thousands of results in one sitting, be reasonable.
 
-**Do my leads get uploaded to your servers?**
-No. All data processing happens locally in your browser. Your scraped leads never leave your machine. Exports are generated client-side.
+**Is my data private?**
+Yes. Everything runs locally in your browser. No data is sent to any server.
 
-**What is the difference between Free and Pro?**
-The free tier lets you try Geo Bucket with limited extractions. Pro unlocks unlimited scraping, email deep-crawling, XLSX exports, and priority support.
+**Free vs Pro?**
+Free gives you a limited number of extractions to try it out. Pro removes the limits and adds email crawling, XLSX exports, and a few other things.
 
-**Does it work on maps.google.com only?**
-It works on all regional Google Maps domains (maps.google.co.uk, maps.google.com.au, etc.).
+**Which Maps domains does it support?**
+All of them. maps.google.com, .co.uk, .com.au, etc.
 
 <br />
 
@@ -147,10 +123,8 @@ It works on all regional Google Maps domains (maps.google.co.uk, maps.google.com
 
 <div align="center">
 
-**Built by [Shihab Miah](https://github.com/Shihab-Miah)**
+Made by [Shihab Miah](https://github.com/Shihab-Miah)
 
-Your next biggest client is already on the map. Let Geo Bucket find them.
-
-<sub>© 2025 Geo Bucket. All rights reserved.</sub>
+<sub>© 2025 Geo Bucket</sub>
 
 </div>
