@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Geo Bucket - Lead Generation Reimagined</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#e2e2e2",
+                    "on-primary": "#003914",
+                    "on-secondary-container": "#b7b4b7",
+                    "tertiary-container": "#a2a0a4",
+                    "tertiary": "#c8c6c9",
+                    "on-primary-container": "#004118",
+                    "on-secondary": "#313032",
+                    "inverse-primary": "#006e2d",
+                    "on-error": "#690005",
+                    "primary": "#1DB954",
+                    "on-tertiary-fixed": "#1b1b1e",
+                    "on-tertiary-fixed-variant": "#47464a",
+                    "surface-container": "#1e2020",
+                    "primary-container": "#1db954",
+                    "on-secondary-fixed-variant": "#474649",
+                    "surface-container-high": "#282a2b",
+                    "surface": "#121414",
+                    "surface-tint": "#1DB954",
+                    "primary-fixed": "#72fe8f",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-lowest": "#09090b",
+                    "surface-container-highest": "#333535",
+                    "outline-variant": "#3d4a3d",
+                    "surface-container-low": "#1a1c1c",
+                    "secondary-container": "#474649",
+                    "primary-fixed-dim": "#1DB954",
+                    "on-secondary-fixed": "#1c1b1d",
+                    "tertiary-fixed-dim": "#c8c6c9",
+                    "surface-dim": "#121414",
+                    "on-surface-variant": "#bccbb9",
+                    "background": "#09090b",
+                    "tertiary-fixed": "#e4e1e5",
+                    "on-primary-fixed-variant": "#005320",
+                    "secondary": "#c8c6c8",
+                    "on-primary-fixed": "#002108",
+                    "surface-variant": "#333535",
+                    "on-tertiary": "#303033",
+                    "on-background": "#e2e2e2",
+                    "inverse-surface": "#e2e2e2",
+                    "outline": "#869585",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "on-tertiary-container": "#37373a",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "secondary-fixed": "#e5e1e4",
+                    "inverse-on-surface": "#2f3131",
+                    "surface-bright": "#38393a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "12px",
+                    "xl": "24px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "stack-md": "24px",
+                    "gutter-mobile": "12px",
+                    "stack-lg": "48px",
+                    "stack-sm": "8px",
+                    "unit": "4px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Geist", "sans-serif"],
+                    "body-md": ["Geist", "sans-serif"],
+                    "headline-lg-mobile": ["Geist", "sans-serif"],
+                    "headline-md": ["Geist", "sans-serif"],
+                    "body-lg": ["Geist", "sans-serif"],
+                    "label-sm": ["Geist", "sans-serif"],
+                    "headline-lg": ["Geist", "sans-serif"],
+                    "label-md": ["Geist", "sans-serif"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "52px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .radar-glow {
+            box-shadow: 0 0 20px rgba(29, 185, 84, 0.15);
+        }
+        .active-ring {
+            box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.4);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-black antialiased">
+<header class="fixed top-0 w-full z-50 bg-white/5 backdrop-blur-md border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-margin-mobile py-4 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+<span class="text-headline-md font-headline-lg-mobile text-primary tracking-tighter">Geo Bucket</span>
+</div>
+<button class="material-symbols-outlined hover:opacity-80 transition-opacity active:scale-95 text-on-surface">menu</button>
+</div>
+</header>
+<main class="pt-24 pb-stack-lg">
+<section class="px-margin-mobile flex flex-col items-center text-center gap-stack-md mb-stack-lg relative overflow-hidden">
+<div class="absolute inset-0 -z-10 flex items-center justify-center opacity-20">
+<div class="w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse-slow"></div>
+</div>
+<div class="space-y-4 max-w-sm">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight">
+                    Stop scrolling.<br/><span class="text-primary">Start closing.</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant px-2">
+                    Automated B2B lead generation from Google Maps directly to your browser.
+                </p>
+</div>
+<div class="w-full flex flex-col gap-4">
+<a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="w-full flex justify-center py-4 bg-primary text-black font-label-md text-label-md rounded-xl active:scale-95 transition-transform font-bold radar-glow">
+                    Add to Chrome (Free)
+                </a>
+<button class="w-full py-4 glass-card text-on-surface font-label-md text-label-md rounded-xl active:scale-95 transition-transform">
+                    View Documentation
+                </button>
+</div>
+<div class="mt-8 w-full glass-card rounded-xl aspect-[4/3] overflow-hidden relative border border-white/10">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative w-full h-full">
+
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-primary text-[64px] animate-pulse" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 glass-card p-container-padding rounded-lg flex items-center justify-between border border-white/10">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 bg-primary rounded-full animate-ping"></div>
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Live Scanning...</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">142 Leads Found</span>
+</div>
+</div>
+</section>
+<section class="px-margin-mobile mb-stack-lg">
+<div class="mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-surface text-center">How to Install</h2>
+</div>
+<div class="grid gap-4">
+<div class="glass-card p-container-padding rounded-xl flex items-center gap-stack-md">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">download_for_offline</span>
+</div>
+<div>
+<span class="block font-label-md text-label-md text-on-surface">Step 1</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Download ZIP</p>
+</div>
+</div>
+<div class="glass-card p-container-padding rounded-xl flex items-center gap-stack-md">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">folder_zip</span>
+</div>
+<div>
+<span class="block font-label-md text-label-md text-on-surface">Step 2</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Unzip the archive</p>
+</div>
+</div>
+<div class="glass-card p-container-padding rounded-xl flex items-center gap-stack-md">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">extension</span>
+</div>
+<div>
+<span class="block font-label-md text-label-md text-on-surface">Step 3</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Load Unpacked in chrome://extensions</p>
+</div>
+</div>
+</div>
+</section>
+<section class="px-margin-mobile mb-stack-lg">
+<div class="mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-surface text-center">Core Features</h2>
+</div>
+<div class="grid gap-4">
+<div class="glass-card p-container-padding rounded-xl group hover:border-primary/50 transition-colors">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">2Captcha Integration</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Solve complex captchas automatically without manual intervention. Scale your searches effortlessly.</p>
+</div>
+<div class="glass-card p-container-padding rounded-xl group hover:border-primary/50 transition-colors">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">troubleshoot</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Deep Web Crawling</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Extract hidden contact details, social profiles, and email addresses directly from business websites.</p>
+</div>
+<div class="glass-card p-container-padding rounded-xl group hover:border-primary/50 transition-colors">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">security</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Anti-Ban Mechanics</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Smart rate-limiting and human-behavior simulation to keep your Google accounts safe and active.</p>
+</div>
+</div>
+</section>
+<section class="px-margin-mobile">
+<div class="glass-card rounded-xl p-container-padding overflow-hidden relative">
+<div class="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
+<div class="relative z-10">
+<h2 class="font-headline-md text-headline-md mb-stack-sm">Ready to extract?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-stack-md">Join 5,000+ businesses using Geo Bucket to fuel their outreach pipeline.</p>
+<a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="w-full flex justify-center py-4 bg-primary text-black font-label-md text-label-md rounded-xl font-bold radar-glow active:scale-95 transition-transform">
+                        Get Started For Free
+                    </a>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-white/5 w-full py-stack-lg">
+<div class="flex flex-col items-center gap-stack-md px-margin-mobile text-center">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary/60 text-headline-md" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+<span class="text-label-md font-label-md text-on-surface-variant">Geo Bucket</span>
+</div>
+<div class="flex flex-wrap justify-center gap-6 mb-8">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Features</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant/60">
+                © 2024 Geo Bucket. All rights reserved.
+            </p>
+</div>
+</footer>
+<script>
+        // Micro-interaction for scroll effects
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('bg-black/60');
+                header.classList.remove('bg-white/5');
+            } else {
+                header.classList.remove('bg-black/60');
+                header.classList.add('bg-white/5');
+            }
+        });
+
+        // Hover effect for glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>
