@@ -4318,8 +4318,9 @@ function getLeadsCount() {
 
   // Load Profile Picture & Check Premium Status
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-     chrome.storage.local.get(["geo_bucket_user_picture", "geo_bucket_is_valid"], (data) => {
-        if (data.geo_bucket_user_picture) {
+     chrome.storage.local.get(["geo_bucket_user_picture", "geo_bucket_is_valid", "geo_bucket_user_email"], (data) => {
+        if (data.geo_bucket_user_email) {
+           const userInitial = data.geo_bucket_user_email.charAt(0).toUpperCase();
            const profileContainer = document.getElementById("geo-permanent-profile-container");
            if (profileContainer) {
               profileContainer.style.display = "flex";
@@ -4360,10 +4361,19 @@ function getLeadsCount() {
                           0% { opacity: 0; transform: scale(0.5) translateY(10px); }
                           100% { opacity: 1; transform: scale(1) translateY(0); }
                        }
-                       .premium-profile-img {
-                          width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+                       .premium-profile-avatar {
+                          width: 48px; height: 48px; border-radius: 50%;
                           border: 2px solid var(--lm-primary);
                           box-shadow: 0 0 20px rgba(var(--lm-primary-rgb), 0.6);
+                          background-color: #111;
+                          color: var(--lm-primary);
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          font-size: 24px;
+                          font-weight: 800;
+                          text-transform: uppercase;
+                          font-family: monospace;
                        }
                        .premium-crown-wrapper {
                           position: absolute;
@@ -4402,7 +4412,7 @@ function getLeadsCount() {
                           animation-delay: 2.2s;
                        }
                     </style>
-                    <img src="${data.geo_bucket_user_picture}" alt="Profile" class="premium-profile-img">
+                    <div class="premium-profile-avatar">${userInitial}</div>
                     <div class="premium-crown-wrapper">
                        <svg class="premium-crown-svg" viewBox="0 0 24 24" fill="var(--lm-primary)">
                           <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
@@ -4425,10 +4435,19 @@ function getLeadsCount() {
                           0% { opacity: 0; transform: scale(0.5) translateY(10px); }
                           100% { opacity: 1; transform: scale(1) translateY(0); }
                        }
-                       .free-profile-img {
-                          width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+                       .free-profile-avatar {
+                          width: 48px; height: 48px; border-radius: 50%;
                           border: 2px solid var(--lm-primary);
                           box-shadow: 0 0 20px rgba(var(--lm-primary-rgb), 0.6);
+                          background-color: #7F1D1D;
+                          color: #ffffff;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          font-size: 24px;
+                          font-weight: 800;
+                          text-transform: uppercase;
+                          font-family: monospace;
                        }
                        .free-cloud-wrapper {
                           position: absolute;
@@ -4467,7 +4486,7 @@ function getLeadsCount() {
                           animation-delay: 2.2s;
                        }
                     </style>
-                    <img src="${data.geo_bucket_user_picture}" alt="Profile" class="free-profile-img">
+                    <div class="free-profile-avatar">${userInitial}</div>
                     <div class="free-cloud-wrapper">
                        <svg class="free-cloud-svg" viewBox="0 0 24 24" fill="#EF4444" stroke="#7F1D1D" stroke-width="0.5">
                           <path d="M18 16c2.2 0 4-1.8 4-4 0-1.9-1.3-3.5-3-3.9.1-.3.1-.7.1-1.1 0-2.8-2.2-5-5-5-2.2 0-4.1 1.4-4.8 3.3C8.6 5.1 8.1 5 7.5 5 5.6 5 4 6.6 4 8.5c0 .6.2 1.2.4 1.7C2.4 11 1 12.8 1 15c0 2.8 2.2 5 5 5h12z"/>
