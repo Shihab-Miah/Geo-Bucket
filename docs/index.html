@@ -90,13 +90,13 @@
 
         /* Hover Glow Effect via JS CSS variables */
         .glow-card {
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .glow-card::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(29, 185, 84, 0.06), transparent 40%);
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(29, 185, 84, 0.08), transparent 40%);
             z-index: 0;
             pointer-events: none;
             opacity: 0;
@@ -106,7 +106,8 @@
             opacity: 1;
         }
         .glow-card:hover {
-            border-color: rgba(29, 185, 84, 0.3);
+            border-color: rgba(29, 185, 84, 0.4);
+            transform: translateY(-8px);
         }
         .glow-card > * {
             position: relative;
@@ -127,8 +128,9 @@
             right: 0;
             z-index: 100;
             padding: 16px 0;
-            background: rgba(2, 6, 23, 0.5);
-            backdrop-filter: blur(12px);
+            background: rgba(2, 6, 23, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
         }
 
@@ -178,7 +180,7 @@
             content: '';
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
             transform: rotate(45deg) translate(-100%, 0);
             transition: transform 0.6s;
         }
@@ -188,14 +190,14 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 10px 40px rgba(29, 185, 84, 0.5);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 10px 40px rgba(29, 185, 84, 0.6);
         }
 
         /* Hero Section */
         .hero {
-            padding-top: 160px;
-            padding-bottom: 80px;
+            padding-top: 180px;
+            padding-bottom: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -230,7 +232,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-size: clamp(2.5rem, 6vw, 5.5rem);
             font-weight: 800;
             line-height: 1.1;
             letter-spacing: -0.04em;
@@ -238,11 +240,11 @@
             background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            min-height: 2.2em; /* Prevents layout shift */
+            min-height: 2.2em;
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 2vw, 1.25rem);
             color: var(--text-muted);
             max-width: 650px;
             margin: 0 auto 40px;
@@ -261,7 +263,7 @@
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 4vw, 2.5rem);
             font-weight: 700;
             letter-spacing: -0.02em;
         }
@@ -288,13 +290,14 @@
             overflow: hidden;
             border: 1px solid var(--border);
             box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(29,185,84,0.15);
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+            z-index: 2;
         }
         
         .video-wrapper:hover {
-            transform: scale(1.02);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(29,185,84,0.25);
-            border-color: rgba(29,185,84,0.4);
+            transform: scale(1.03) translateY(-10px);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(29,185,84,0.3);
+            border-color: rgba(29,185,84,0.5);
         }
 
         .video-wrapper iframe {
@@ -336,6 +339,13 @@
             font-size: 1.2rem;
             font-family: 'JetBrains Mono', monospace;
             box-shadow: 0 0 15px rgba(29,185,84,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover::before {
+            background: var(--accent);
+            color: #000;
+            transform: scale(1.1) rotate(5deg);
         }
 
         .step-title {
@@ -362,17 +372,13 @@
         /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
 
         .feature-card {
             padding: 32px;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
+            /* Animation handled by .glow-card */
         }
 
         .feature-icon {
@@ -387,8 +393,14 @@
             color: var(--accent);
             margin-bottom: 24px;
             box-shadow: inset 0 0 20px rgba(29,185,84,0.05);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(-5deg);
+            background: rgba(29, 185, 84, 0.2);
+        }
+
         .feature-icon .material-symbols-outlined {
             font-size: 28px;
         }
@@ -429,11 +441,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: color 0.3s;
+            transition: all 0.3s;
         }
 
         .footer-links a:hover {
             color: var(--accent);
+            transform: translateX(5px);
         }
         
         .footer-links .material-symbols-outlined {
@@ -457,26 +470,71 @@
             object-fit: cover;
         }
 
+        /* Stunning WhatsApp QR Code Card */
         .qr-card {
-            background: rgba(255,255,255,0.05);
-            padding: 16px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            display: inline-block;
-            text-align: center;
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(37, 211, 102, 0.15) 0%, transparent 60%);
+            animation: rotate-glow 10s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        @keyframes rotate-glow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .qr-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #25D366; /* WhatsApp Green */
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.2);
+            background: rgba(37, 211, 102, 0.05);
+        }
+        
+        .qr-image-wrapper {
+            background: #fff; /* QR needs contrast */
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
         .qr-card img {
-            width: 150px;
-            height: 150px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            width: 140px;
+            height: 140px;
+            display: block;
         }
         
-        .qr-card p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
+        .qr-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #f8fafc;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .qr-text .material-symbols-outlined {
+            color: #25D366; /* WhatsApp Green */
         }
 
         .footer-bottom {
@@ -489,6 +547,15 @@
 
         /* Utility classes for GSAP */
         .gsap-reveal { opacity: 0; visibility: hidden; }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 120px;
+            }
+            .glass-panel {
+                padding: 30px 20px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -529,8 +596,8 @@
         </div>
     </header>
 
-    <!-- Setup Guide is now immediately below the hero -->
-    <section class="section container">
+    <!-- Setup Guide is now immediately below the hero, added ID for auto-scroll -->
+    <section class="section container" id="setup-guide">
         <div class="glass-panel" style="padding: 60px 40px; border-radius: 40px;">
             <div class="section-header gsap-reveal" style="margin-bottom: 40px;">
                 <h2>Quick Setup Guide</h2>
@@ -604,7 +671,7 @@
     <section class="section container" style="text-align: center; padding-bottom: 60px;">
         <div class="glass-panel gsap-reveal glow-card" style="padding: 80px 40px; position: relative; overflow: hidden;">
             <div style="position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: var(--accent); filter: blur(150px); opacity: 0.2; z-index: 0;"></div>
-            <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 24px; position: relative; z-index: 1;">Ready to land your next client?</h2>
+            <h2 style="font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 24px; position: relative; z-index: 1;">Ready to land your next client?</h2>
             <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 32px; position: relative; z-index: 1;">Start building your B2B lead database today.</p>
             <a href="https://github.com/Shihab-Miah/Geo-Bucket/archive/refs/heads/main.zip" class="btn-primary" style="position: relative; z-index: 1; padding: 18px 40px; font-size: 1.2rem;">
                 <span class="material-symbols-outlined">download</span>
@@ -631,7 +698,8 @@
                     <h4>Connect With Us</h4>
                     <ul class="footer-links">
                         <li>
-                            <a href="mailto:shihabmiah.work@gmail.com">
+                            <!-- Direct link to Gmail web compose -->
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=shihabmiah.work@gmail.com" target="_blank" rel="noopener">
                                 <span class="material-symbols-outlined">mail</span>
                                 shihabmiah.work@gmail.com
                             </a>
@@ -654,9 +722,14 @@
                 <div class="footer-col">
                     <h4>Support / Contact</h4>
                     <div class="qr-card">
-                        <!-- Standard QR Code as used in payment system -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wa.me/8801951838769" alt="WhatsApp QR Code">
-                        <p>Scan to chat on WhatsApp</p>
+                        <div class="qr-image-wrapper">
+                            <!-- Standard QR Code as used in payment system -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wa.me/8801951838769" alt="WhatsApp QR Code">
+                        </div>
+                        <div class="qr-text">
+                            <span class="material-symbols-outlined">forum</span>
+                            Chat on WhatsApp
+                        </div>
                     </div>
                 </div>
 
@@ -690,6 +763,21 @@
                 });
             }
         });
+
+        // Auto-scroll to Setup Guide after 5.5 seconds (only if user hasn't scrolled manually)
+        let hasUserScrolled = false;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) hasUserScrolled = true;
+        }, { once: true });
+
+        setTimeout(() => {
+            if (!hasUserScrolled) {
+                const guideSection = document.getElementById('setup-guide');
+                if (guideSection) {
+                    guideSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }, 5500);
 
         // Ensure GSAP is loaded before animating
         window.onload = () => {
