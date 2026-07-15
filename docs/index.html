@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Geo Bucket | Get B2B Clients from Google Maps</title>
     <meta name="description" content="Extract verified emails, phone numbers, and websites from Google Maps to land more B2B clients and scale your outreach.">
     <meta name="keywords" content="Google Maps Lead Extractor, B2B Lead Generation Tool, Google Maps Data Scraper, Local Business Email Extractor, B2B Sales Prospecting, Automated Lead Finder">
@@ -64,12 +64,16 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            overflow-x: hidden;
             line-height: 1.6;
+            width: 100%;
         }
 
         /* ─── Antigravity Floating Orbs ─── */
