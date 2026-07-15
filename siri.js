@@ -1,13 +1,5 @@
-const _visualLog = document.createElement('div');
-_visualLog.id = 'geo-debug-terminal';
-_visualLog.style.cssText = 'position:fixed; bottom:0; left:0; width:100%; height:150px; background:rgba(0,0,0,0.8); color:#0f0; font-family:monospace; font-size:12px; padding:10px; overflow-y:scroll; z-index:9999999; pointer-events:none; border-top:1px solid #0f0;';
-document.body.appendChild(_visualLog);
 function logmsg(msg) {
-  console.log(msg);
-  const p = document.createElement('div');
-  p.textContent = '> ' + msg;
-  _visualLog.appendChild(p);
-  _visualLog.scrollTop = _visualLog.scrollHeight;
+  // console.log(msg); // Silenced for production
 }
   /* Developed by Shihab Miah @ BetaFloor | Lumina Scraper (MapLeadr) v5.4.2 */
 // MapLeadr AI UI Logic Overhaul
