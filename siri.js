@@ -27,10 +27,10 @@ const textMap = {
   "export as xlsx": "Export XLSX",
   "export all to csv": "Export All CSV",
   "export all to xlsx": "Export All XLSX",
-  "leads sniper": "Geo Bucket",
-  "lead sniper": "Geo Bucket",
-  "mapleadr": "Geo Bucket",
-  "google maps scraper": "Geo Bucket Engine"
+  "leads sniper": "Client Koi",
+  "lead sniper": "Client Koi",
+  "mapleadr": "Client Koi",
+  "google maps scraper": "Client Koi Engine"
 };
 
 // Global reactive cache for license status (used for logo switching)
@@ -305,9 +305,9 @@ function applyAllUIUpgrades() {
     } else if (val.includes('sit back, have a coffee')) {
       nodesToReplace.push({node, newVal: 'AI Extraction sequence initiated. Scanning geospatial nodes...'});
     } else if (val.includes('leads sniper') || val.includes('lead sniper') || val.includes('mapleadr')) {
-      nodesToReplace.push({node, newVal: node.nodeValue.replace(/Leads Sniper|Lead Sniper|MapLeadr/gi, 'Geo Bucket')});
+      nodesToReplace.push({node, newVal: node.nodeValue.replace(/Leads Sniper|Lead Sniper|MapLeadr/gi, 'Client Koi')});
     } else if (val.includes('google maps scraper')) {
-      nodesToReplace.push({node, newVal: node.nodeValue.replace(/Google Maps Scraper/gi, 'Geo Bucket Engine')});
+      nodesToReplace.push({node, newVal: node.nodeValue.replace(/Google Maps Scraper/gi, 'Client Koi Engine')});
     }
   }
   nodesToReplace.forEach(({node, newVal}) => {
@@ -408,7 +408,7 @@ function applyAllUIUpgrades() {
     // 5.2. Animate the Geo Bucket text glow
     // The native app might not use an h1, so we search for the exact text node container
     const allHeaderNodes = Array.from(headerContainer.querySelectorAll('div, span, h1, h2, p'));
-    const titleNode = allHeaderNodes.find(n => n.childNodes.length === 1 && n.textContent.trim() === 'Geo Bucket');
+    const titleNode = allHeaderNodes.find(n => n.childNodes.length === 1 && n.textContent.trim() === 'Client Koi');
     if (titleNode) {
       titleNode.style.animation = 'lm-text-glow 1.5s ease-in-out infinite alternate';
       titleNode.style.color = '#ffffff';
@@ -904,7 +904,7 @@ function applyAllUIUpgrades() {
       if (p) {
         Array.from(p.childNodes).forEach(node => {
           if (node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('Scraping process completed successfully.')) {
-            node.nodeValue = node.nodeValue.replace('Scraping process completed successfully.', 'Geo Bucket has successfully secured your data payload.');
+            node.nodeValue = node.nodeValue.replace('Scraping process completed successfully.', 'Client Koi has successfully secured your data payload.');
           }
         });
       }
@@ -1003,14 +1003,14 @@ function applyAllUIUpgrades() {
   // 13. Overhaul Export Settings Modal
   const exportModals = document.querySelectorAll('.max-w-\\[500px\\].bg-\\[\\#0f172a\\]');
   exportModals.forEach(modal => {
-    if ((modal.textContent.includes('Export Settings') || modal.textContent.includes('Download Data') || modal.textContent.includes('Geo Bucket')) && !modal.classList.contains('lm-export-upgraded')) {
+    if ((modal.textContent.includes('Export Settings') || modal.textContent.includes('Download Data') || modal.textContent.includes('Client Koi')) && !modal.classList.contains('lm-export-upgraded')) {
       modal.classList.add('lm-export-upgraded');
 
       // 1. Redesign Header
       const headerTitle = modal.querySelector('h2');
       if (headerTitle) {
         headerTitle.innerHTML = `
-           <div style="font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,255,255,0.4); animation: lm-text-glow 1.5s ease-in-out infinite alternate; margin-bottom: 2px;">Geo Bucket</div>
+           <div style="font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,255,255,0.4); animation: lm-text-glow 1.5s ease-in-out infinite alternate; margin-bottom: 2px;">Client Koi</div>
            <div style="font-size: 14px; font-weight: 800; color: var(--lm-primary); letter-spacing: 1.5px; text-transform: uppercase;">Download Data</div>
         `;
         headerTitle.style.display = 'flex';
@@ -1956,7 +1956,7 @@ function applyAllUIUpgrades() {
          if (contactBtn) {
             const emailBtn = document.createElement('a');
             emailBtn.href = '#';
-            emailBtn.title = 'Email Geo Bucket';
+            emailBtn.title = 'Email Client Koi';
             emailBtn.className = 'w-10 h-10 rounded-xl flex items-center justify-center transition-all group cursor-pointer';
             emailBtn.style.background = 'rgba(var(--lm-primary-rgb), 0.1)';
             emailBtn.style.border = '1px solid var(--lm-primary)';
@@ -4329,7 +4329,7 @@ function getLeadsCount() {
          <img class="lm-radar-lottie" src="${logoSrc}" style="width: 100%; height: 100%; position: relative; z-index: 2; border-radius: 50%; object-fit: contain; animation: geo-spin 8s linear infinite;" alt="Logo">
       </div>
       <div style="display: flex; flex-direction: column;">
-        <h1 style="color: var(--lm-primary); font-weight: 900; font-size: ${isDataTab ? '20px' : '23px'}; margin: 0; line-height: 1; text-shadow: 0 0 15px rgba(var(--lm-primary-rgb),0.5); font-family: 'Hanken Grotesk', sans-serif; letter-spacing: 0.5px;">Geo Bucket</h1>
+        <h1 style="color: var(--lm-primary); font-weight: 900; font-size: ${isDataTab ? '20px' : '23px'}; margin: 0; line-height: 1; text-shadow: 0 0 15px rgba(var(--lm-primary-rgb),0.5); font-family: 'Hanken Grotesk', sans-serif; letter-spacing: 0.5px;">Client Koi</h1>
         <span id="geo-permanent-logo-subtext" style="color: var(--lm-primary); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; text-shadow: 0 0 10px rgba(var(--lm-primary-rgb), 0.4);">Free Extractor</span>
       </div>
     </div>
