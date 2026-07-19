@@ -9,10 +9,10 @@
     <meta name="author" content="Client Koi">
     <meta name="robots" content="index, follow">
     
-    <!-- Prevent Capitalization Split (Canonical Tag) -->
+    <!-- canonical -->
     <link rel="canonical" href="https://shihab-miah.github.io/Client-Koi/" />
 
-    <!-- Structured Schema Markup (JSON-LD) for SoftwareApplication -->
+    <!-- schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -62,7 +62,7 @@
         })(window, document, "clarity", "script", "xmqhfxyyz5");
     </script>
     
-    <!-- Fonts (Optimized for performance) -->
+    <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -109,7 +109,7 @@
             width: 100%;
         }
 
-        /* ─── Antigravity Floating Orbs ─── */
+        /* background orbs */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -143,7 +143,7 @@
             100% { transform: translate(-100px, -80px) scale(1.1); }
         }
 
-        /* Screen Reader Only for SEO */
+        /* a11y hidden */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -155,7 +155,7 @@
             border: 0;
         }
 
-        /* Glassmorphism Utilities */
+        /* glass panel */
         .glass-panel {
             background: var(--surface-1);
             backdrop-filter: blur(16px);
@@ -166,7 +166,7 @@
             overflow: hidden;
         }
 
-        /* Hover Glow Effect via JS CSS variables */
+        /* card glow */
         .glow-card {
             transition: border-color 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -548,7 +548,7 @@
             object-fit: cover;
         }
 
-        /* Stunning WhatsApp QR Code Card */
+        /* qr code */
         .qr-card {
             background: rgba(255,255,255,0.03);
             padding: 20px;
@@ -661,7 +661,7 @@
 </head>
 <body>
 
-    <!-- Antigravity Background Orbs -->
+    <!-- bg fx -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
@@ -703,7 +703,6 @@
         </div>
     </header>
 
-    <!-- Setup Guide is now immediately below the hero, added ID for auto-scroll -->
     <section class="section container" id="setup-guide">
         <div class="glass-panel" style="padding: 60px 40px; border-radius: 40px;">
             <div class="section-header gsap-reveal" style="margin-bottom: 40px;">
@@ -749,7 +748,7 @@
         </div>
     </section>
 
-    <!-- Niche-focused Features Grid -->
+    <!-- features -->
     <section id="features" class="section container">
         <div class="section-header gsap-reveal">
             <h2>The Ultimate Google Maps Scraper</h2>
@@ -935,7 +934,7 @@
     </main>
 
     <script>
-        // JS Hover Glow effect on cards
+        // card glow fx
         document.querySelectorAll('.glow-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
@@ -946,7 +945,7 @@
             });
         });
 
-        // Localization logic: Check if user language is Bangla
+        // show bangla text if browser lang is bn
         document.addEventListener('DOMContentLoaded', () => {
             const userLang = navigator.language || navigator.userLanguage;
             if (userLang.toLowerCase().startsWith('bn')) {
@@ -957,7 +956,7 @@
             }
         });
 
-        // Auto-scroll to Setup Guide after 5.5 seconds (only if user hasn't scrolled manually)
+        // auto scroll logic
         let hasUserScrolled = false;
         window.addEventListener('scroll', () => {
             if (window.scrollY > 100) hasUserScrolled = true;
@@ -972,7 +971,7 @@
             }
         }, 5500);
 
-        // Ensure GSAP is loaded before animating
+        // init gsap
         window.onload = () => {
             if (typeof gsap !== 'undefined') {
                 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -980,7 +979,7 @@
                 if (!prefersReducedMotion) {
                     gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-                    // Typing Effect focused on getting clients
+                    // hero typing
                     gsap.to("#typewriter", {
                         duration: 2.5,
                         text: "Find your next B2B clients.<br>Extract leads from Maps.",
@@ -989,13 +988,13 @@
                     });
                     gsap.to(".cursor", { opacity: 0, ease: "power2.inOut", repeat: -1, yoyo: true, duration: 0.6 });
 
-                    // Hero Entrance Animation (excluding h1 which is typed)
+                    // fade in
                     gsap.fromTo('.gsap-hero:not(h1)', 
                         { y: 30, opacity: 0 },
                         { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", delay: 0.5 }
                     );
                     
-                    // Scroll Reveal Animation for sections
+                    // scroll reveal
                     const revealElements = document.querySelectorAll('.gsap-reveal');
                     revealElements.forEach((el) => {
                         gsap.set(el, { autoAlpha: 1 });
