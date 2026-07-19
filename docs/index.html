@@ -633,12 +633,28 @@
         @media (max-width: 768px) {
             .hero {
                 padding-top: 120px;
+                padding-bottom: 60px;
+            }
+            .hero h1 {
+                font-size: clamp(2rem, 8vw, 2.5rem);
+                line-height: 1.2;
+                min-height: 3em;
             }
             .glass-panel {
                 padding: 30px 20px !important;
             }
             .footer-brand {
                 grid-column: span 1;
+            }
+            .nav-links {
+                display: none !important;
+            }
+            .nav-download {
+                padding: 8px 16px !important;
+                font-size: 0.85rem !important;
+            }
+            .nav-download .material-symbols-outlined {
+                display: none;
             }
         }
     </style>
@@ -655,12 +671,12 @@
                 <img src="logo.png" alt="Client Koi Logo" width="36" height="36">
                 Client Koi
             </a>
-            <div style="display: flex; gap: 24px; font-weight: 500; font-size: 0.95rem;">
+            <div class="nav-links" style="display: flex; gap: 24px; font-weight: 500; font-size: 0.95rem;">
                 <a href="#setup-guide" style="text-decoration: none; color: #fff;">Setup Guide</a>
                 <a href="#features" style="text-decoration: none; color: #fff;">Features</a>
                 <a href="#faq" style="text-decoration: none; color: #fff;">FAQ</a>
             </div>
-            <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">
+            <a href="https://github.com/Shihab-Miah/Client-Koi/archive/refs/heads/main.zip" class="btn-primary nav-download" style="padding: 10px 20px; font-size: 0.9rem;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">download</span>
                 Download
             </a>
