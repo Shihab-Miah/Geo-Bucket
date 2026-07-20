@@ -1169,30 +1169,46 @@ function applyAllUIUpgrades() {
 
         // 4. Download Button Overhaul
         if (dlBtn) {
-            dlBtn.className = 'w-full rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all cursor-pointer';
-            dlBtn.style.height = '56px';
-            dlBtn.style.background = 'linear-gradient(135deg, rgba(var(--lm-primary-rgb), 0.2), rgba(var(--lm-primary-rgb), 0.05))';
-            dlBtn.style.border = '1px solid var(--lm-primary)';
-            dlBtn.style.color = 'var(--lm-primary)';
-            dlBtn.style.boxShadow = '0 0 20px rgba(var(--lm-primary-rgb), 0.2), inset 0 0 10px rgba(var(--lm-primary-rgb), 0.1)';
+            const isPro = window.geo_bucket_is_valid;
             
-            dlBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:24px; animation: lm-pulse-glow 2s infinite alternate;">rocket_launch</span> EXECUTE DOWNLOAD`;
+            const colorHex = isPro ? '#fbbf24' : '#10b981';
+            const colorRgb = isPro ? '251, 191, 36' : '16, 185, 129';
+            
+            dlBtn.className = 'w-full rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer relative overflow-hidden group';
+            dlBtn.style.height = '56px';
+            dlBtn.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            dlBtn.style.background = `linear-gradient(135deg, rgba(${colorRgb}, 0.15), rgba(${colorRgb}, 0.05))`;
+            dlBtn.style.border = `1px solid rgba(${colorRgb}, 0.4)`;
+            dlBtn.style.color = colorHex;
+            dlBtn.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(${colorRgb}, 0.15), inset 0 0 10px rgba(${colorRgb}, 0.05)`;
+            dlBtn.style.backdropFilter = 'blur(12px)';
+            
+            // Add shine layer and icon
+            dlBtn.innerHTML = `
+              <div class="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); pointer-events: none;"></div>
+              <span class="material-symbols-outlined z-10 transition-colors duration-300" style="font-size:24px; animation: lm-pulse-glow 2s infinite alternate; color:${colorHex}">${isPro ? 'diamond' : 'rocket_launch'}</span>
+              <span class="z-10 transition-colors duration-300" style="color:${colorHex}">${isPro ? 'PRO EXPORT' : 'EXECUTE DOWNLOAD'}</span>
+              ${isPro ? `<span class="absolute top-1 left-3 text-[9px] tracking-widest opacity-80 z-10" style="color:${colorHex}">PREMIUM</span>` : ''}
+            `;
             
             dlBtn.addEventListener('mouseenter', () => {
-              dlBtn.style.background = 'var(--lm-primary)';
-              dlBtn.style.color = '#000';
-              dlBtn.style.boxShadow = '0 0 30px rgba(var(--lm-primary-rgb), 0.6)';
-              dlBtn.style.transform = 'translateY(-2px)';
-              const icon = dlBtn.querySelector('span');
-              if(icon) icon.style.color = '#000';
+              dlBtn.style.background = colorHex;
+              dlBtn.style.border = `1px solid ${colorHex}`;
+              dlBtn.style.boxShadow = `0 10px 40px rgba(${colorRgb}, 0.4), inset 0 0 20px rgba(255,255,255,0.2)`;
+              dlBtn.style.transform = 'translateY(-2px) translateZ(0)';
+              
+              const spans = dlBtn.querySelectorAll('.z-10');
+              spans.forEach(s => s.style.color = '#000000');
             });
+            
             dlBtn.addEventListener('mouseleave', () => {
-              dlBtn.style.background = 'linear-gradient(135deg, rgba(var(--lm-primary-rgb), 0.2), rgba(var(--lm-primary-rgb), 0.05))';
-              dlBtn.style.color = 'var(--lm-primary)';
-              dlBtn.style.boxShadow = '0 0 20px rgba(var(--lm-primary-rgb), 0.2), inset 0 0 10px rgba(var(--lm-primary-rgb), 0.1)';
-              dlBtn.style.transform = 'translateY(0)';
-              const icon = dlBtn.querySelector('span');
-              if(icon) icon.style.color = 'var(--lm-primary)';
+              dlBtn.style.background = `linear-gradient(135deg, rgba(${colorRgb}, 0.15), rgba(${colorRgb}, 0.05))`;
+              dlBtn.style.border = `1px solid rgba(${colorRgb}, 0.4)`;
+              dlBtn.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(${colorRgb}, 0.15), inset 0 0 10px rgba(${colorRgb}, 0.05)`;
+              dlBtn.style.transform = 'translateY(0) translateZ(0)';
+              
+              const spans = dlBtn.querySelectorAll('.z-10');
+              spans.forEach(s => s.style.color = colorHex);
             });
         }
       }
@@ -1405,6 +1421,56 @@ function applyAllUIUpgrades() {
           resetBtn.style.boxShadow = 'none';
         });
       }
+    }
+  });
+
+  // 16. Overhaul Main Download Button (Data View Leads Tab)
+  const mainDownloadBtns = document.querySelectorAll('button');
+  mainDownloadBtns.forEach(btn => {
+    if (btn.textContent.includes('Download') && btn.className.includes('bg-[') && !btn.classList.contains('lm-main-download-upgraded')) {
+       btn.classList.add('lm-main-download-upgraded');
+       
+       const isPro = window.geo_bucket_is_valid;
+       const colorHex = isPro ? '#fbbf24' : '#10b981';
+       const colorRgb = isPro ? '251, 191, 36' : '16, 185, 129';
+       
+       // Completely override React classes with Antigravity UI style
+       btn.className = 'lm-main-download-upgraded rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer relative overflow-hidden group';
+       btn.style.height = '48px';
+       btn.style.padding = '0 24px';
+       btn.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+       btn.style.background = `linear-gradient(135deg, rgba(${colorRgb}, 0.15), rgba(${colorRgb}, 0.05))`;
+       btn.style.border = `1px solid rgba(${colorRgb}, 0.4)`;
+       btn.style.color = colorHex;
+       btn.style.boxShadow = `0 8px 24px rgba(0, 0, 0, 0.2), 0 0 15px rgba(${colorRgb}, 0.1), inset 0 0 10px rgba(${colorRgb}, 0.05)`;
+       btn.style.backdropFilter = 'blur(12px)';
+       
+       btn.innerHTML = `
+         <div class="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); pointer-events: none;"></div>
+         <span class="material-symbols-outlined z-10 transition-colors duration-300" style="font-size:20px; animation: lm-pulse-glow 2s infinite alternate; color:${colorHex}">${isPro ? 'workspace_premium' : 'cloud_download'}</span>
+         <span class="z-10 transition-colors duration-300 flex flex-col items-start leading-none" style="color:${colorHex}">
+           <span style="font-size:14px;">${isPro ? 'PRO DOWNLOAD' : 'DOWNLOAD'}</span>
+           <span style="font-size:8px; opacity:0.8; letter-spacing:1px; margin-top:2px;">${isPro ? 'PREMIUM FEATURES' : 'FREE TIER'}</span>
+         </span>
+       `;
+       
+       btn.addEventListener('mouseenter', () => {
+         btn.style.background = colorHex;
+         btn.style.border = `1px solid ${colorHex}`;
+         btn.style.boxShadow = `0 10px 30px rgba(${colorRgb}, 0.3), inset 0 0 20px rgba(255,255,255,0.2)`;
+         btn.style.transform = 'translateY(-2px) translateZ(0)';
+         const spans = btn.querySelectorAll('.z-10');
+         spans.forEach(s => s.style.color = '#000000');
+       });
+       
+       btn.addEventListener('mouseleave', () => {
+         btn.style.background = `linear-gradient(135deg, rgba(${colorRgb}, 0.15), rgba(${colorRgb}, 0.05))`;
+         btn.style.border = `1px solid rgba(${colorRgb}, 0.4)`;
+         btn.style.boxShadow = `0 8px 24px rgba(0, 0, 0, 0.2), 0 0 15px rgba(${colorRgb}, 0.1), inset 0 0 10px rgba(${colorRgb}, 0.05)`;
+         btn.style.transform = 'translateY(0) translateZ(0)';
+         const spans = btn.querySelectorAll('.z-10');
+         spans.forEach(s => s.style.color = colorHex);
+       });
     }
   });
 
