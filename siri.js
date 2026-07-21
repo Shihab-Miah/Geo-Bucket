@@ -3331,13 +3331,25 @@ async function isBangladeshUser() {
     }
 }
 
+async function geoFetchLocation() {
+   try {
+      const res = await fetch("https://freeipapi.com/api/json");
+      const data = await res.json();
+      if (data && data.cityName && data.countryName) {
+         return `${data.cityName}, ${data.countryName}`;
+      }
+   } catch(e) {}
+   return "Unknown";
+}
+
 async function geoManualRegister(email) {
    try {
       const fakeGoogleId = "manual_" + email.replace(/[^a-zA-Z0-9]/g, "");
+      const location = await geoFetchLocation();
       const r = await fetch(GEO_APP_SCRIPT_URL, {
          method: 'POST',
          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-         body: JSON.stringify({ action: "register", googleId: fakeGoogleId, email })
+         body: JSON.stringify({ action: "register", googleId: fakeGoogleId, email, location })
       });
       const result = await r.json();
       if (result.success) {
@@ -3354,13 +3366,13 @@ async function geoManualRegister(email) {
    }
 }
 
-async function geoLoginGoogle() {
+async function geoLoginGoogle(phone) {
    return new Promise((resolve) => {
       chrome.identity.getAuthToken({ interactive: true }, function(token) {
          if (chrome.runtime.lastError || !token) {
             chrome.identity.getProfileUserInfo({ 'accountStatus': 'ANY' }, function(userInfo) {
                if (userInfo && userInfo.email && userInfo.id) {
-                  finishLogin(userInfo.email, userInfo.id, "", "", "");
+                  finishLogin(userInfo.email, userInfo.id, "", "", "", phone);
                } else {
                   resolve({ success: false, error: "No signed-in Chrome profile found." });
                }
@@ -3372,7 +3384,7 @@ async function geoLoginGoogle() {
             .then(res => res.json())
             .then(data => {
                if (data.email && data.id) {
-                  finishLogin(data.email, data.id, data.name || "", data.picture || "", data.locale || "");
+                  finishLogin(data.email, data.id, data.name || "", data.picture || "", data.locale || "", phone);
                } else {
                   resolve({ success: false, error: "Failed to fetch Google profile data." });
                }
@@ -3383,12 +3395,15 @@ async function geoLoginGoogle() {
          }
       });
 
-      async function finishLogin(email, id, name, picture, locale) {
+      async function finishLogin(email, id, name, picture, locale, phone) {
          try {
+            // Speed optimization: Use cached location if available
+            let location = typeof globalDetectedLocation !== 'undefined' && globalDetectedLocation ? globalDetectedLocation : await geoFetchLocation();
+            
             await fetch(GEO_APP_SCRIPT_URL, {
                method: 'POST',
                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-               body: JSON.stringify({ action: "register", googleId: id, email: email, name: name, picture: picture, locale: locale })
+               body: JSON.stringify({ action: "register", googleId: id, email: email, name: name, picture: picture, locale: locale, location: location, phone: phone || "" })
             });
             await chrome.storage.local.set({ 
                geo_bucket_user_email: email, 
@@ -4061,6 +4076,18 @@ async function showLicensingOverlay(status, paymentUrl, closable = false) {
       .google-btn:active { transform: scale(0.98); }
       .info-message { margin-top: 20px; font-size: 13px; font-weight: 700; color: #ef4444; }
       .info-message.success { color: var(--primary); }
+      .custom-dropdown { position: relative; width: 90px; flex-shrink: 0; }
+      .dropdown-selected { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; border-radius: 8px; padding: 12px; font-size: 13px; font-family: inherit; cursor: pointer; text-align: center; user-select: none; transition: border-color 0.2s; }
+      .dropdown-selected:hover { border-color: rgba(255,255,255,0.2); }
+      .dropdown-menu { position: absolute; bottom: calc(100% + 4px); left: 0; width: 220px; background: #090d12; border: 1px solid var(--border); border-radius: 12px; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; }
+      .dropdown-search { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+      .dropdown-search input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; outline: none; font-size: 12px; box-sizing: border-box; }
+      .dropdown-search input:focus { border-color: var(--primary); }
+      .dropdown-list { list-style: none; margin: 0; padding: 0; max-height: 180px; overflow-y: auto; text-align: left; }
+      .dropdown-list li { padding: 8px 12px; font-size: 12px; color: #cbd5e1; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.02); }
+      .dropdown-list li:hover { background: rgba(var(--lm-primary-rgb), 0.15); color: #fff; }
+      .dropdown-list::-webkit-scrollbar { width: 4px; }
+      .dropdown-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
    `;
 
    const wrapper = document.createElement("div");
@@ -4075,6 +4102,22 @@ async function showLicensingOverlay(status, paymentUrl, closable = false) {
          </div>
          <h2>Sign In Required</h2>
          <p class="subtitle">Log in with your Google account to initialize your profile and start your 3-day free trial.</p>
+         
+         <div class="input-group" style="margin-top: 20px; margin-bottom: 16px; text-align: left;">
+            <label style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; margin-bottom: 6px; display: block; font-weight: 700; letter-spacing: 0.5px;">Phone Number (Required)</label>
+            <div style="display: flex; gap: 8px;">
+               <div class="custom-dropdown" id="geo-custom-dropdown">
+                  <div class="dropdown-selected" id="geo-dropdown-selected">+880</div>
+                  <div class="dropdown-menu" id="geo-dropdown-menu" style="display:none;">
+                     <div class="dropdown-search">
+                        <input type="text" id="geo-country-search" placeholder="Search code (e.g. 880) or country...">
+                     </div>
+                     <ul class="dropdown-list" id="geo-country-list"></ul>
+                  </div>
+               </div>
+               <input type="tel" id="geo-phone-input" placeholder="Enter your phone number" maxlength="15" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; border-radius: 8px; padding: 12px; outline: none; flex-grow: 1; font-size: 14px; font-family: monospace; transition: border-color 0.2s;">
+            </div>
+         </div>
          
          <button class="google-btn" id="google-login-btn">
             <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
@@ -4093,20 +4136,105 @@ async function showLicensingOverlay(status, paymentUrl, closable = false) {
    shadow.appendChild(wrapper);
    document.body.appendChild(container);
 
+   let currentCode = "+880";
+   const selectedEl = shadow.getElementById("geo-dropdown-selected");
+   const menuEl = shadow.getElementById("geo-dropdown-menu");
+   const searchEl = shadow.getElementById("geo-country-search");
+   const listEl = shadow.getElementById("geo-country-list");
+   
+   const countryList = [{"name":"Afghanistan","code":"AF","dial_code":"+93"},{"name":"Albania","code":"AL","dial_code":"+355"},{"name":"Algeria","code":"DZ","dial_code":"+213"},{"name":"Argentina","code":"AR","dial_code":"+54"},{"name":"Australia","code":"AU","dial_code":"+61"},{"name":"Austria","code":"AT","dial_code":"+43"},{"name":"Bangladesh","code":"BD","dial_code":"+880"},{"name":"Belgium","code":"BE","dial_code":"+32"},{"name":"Brazil","code":"BR","dial_code":"+55"},{"name":"Canada","code":"CA","dial_code":"+1"},{"name":"China","code":"CN","dial_code":"+86"},{"name":"Colombia","code":"CO","dial_code":"+57"},{"name":"Denmark","code":"DK","dial_code":"+45"},{"name":"Egypt","code":"EG","dial_code":"+20"},{"name":"Finland","code":"FI","dial_code":"+358"},{"name":"France","code":"FR","dial_code":"+33"},{"name":"Germany","code":"DE","dial_code":"+49"},{"name":"Greece","code":"GR","dial_code":"+30"},{"name":"India","code":"IN","dial_code":"+91"},{"name":"Indonesia","code":"ID","dial_code":"+62"},{"name":"Iran","code":"IR","dial_code":"+98"},{"name":"Iraq","code":"IQ","dial_code":"+964"},{"name":"Ireland","code":"IE","dial_code":"+353"},{"name":"Israel","code":"IL","dial_code":"+972"},{"name":"Italy","code":"IT","dial_code":"+39"},{"name":"Japan","code":"JP","dial_code":"+81"},{"name":"Kenya","code":"KE","dial_code":"+254"},{"name":"Malaysia","code":"MY","dial_code":"+60"},{"name":"Mexico","code":"MX","dial_code":"+52"},{"name":"Morocco","code":"MA","dial_code":"+212"},{"name":"Netherlands","code":"NL","dial_code":"+31"},{"name":"New Zealand","code":"NZ","dial_code":"+64"},{"name":"Nigeria","code":"NG","dial_code":"+234"},{"name":"Norway","code":"NO","dial_code":"+47"},{"name":"Pakistan","code":"PK","dial_code":"+92"},{"name":"Peru","code":"PE","dial_code":"+51"},{"name":"Philippines","code":"PH","dial_code":"+63"},{"name":"Poland","code":"PL","dial_code":"+48"},{"name":"Portugal","code":"PT","dial_code":"+351"},{"name":"Russia","code":"RU","dial_code":"+7"},{"name":"Saudi Arabia","code":"SA","dial_code":"+966"},{"name":"Singapore","code":"SG","dial_code":"+65"},{"name":"South Africa","code":"ZA","dial_code":"+27"},{"name":"South Korea","code":"KR","dial_code":"+82"},{"name":"Spain","code":"ES","dial_code":"+34"},{"name":"Sri Lanka","code":"LK","dial_code":"+94"},{"name":"Sweden","code":"SE","dial_code":"+46"},{"name":"Switzerland","code":"CH","dial_code":"+41"},{"name":"Thailand","code":"TH","dial_code":"+66"},{"name":"Turkey","code":"TR","dial_code":"+90"},{"name":"Uganda","code":"UG","dial_code":"+256"},{"name":"Ukraine","code":"UA","dial_code":"+380"},{"name":"United Arab Emirates","code":"AE","dial_code":"+971"},{"name":"United Kingdom","code":"GB","dial_code":"+44"},{"name":"United States","code":"US","dial_code":"+1"},{"name":"Venezuela","code":"VE","dial_code":"+58"},{"name":"Vietnam","code":"VN","dial_code":"+84"}];
+   
+   function renderList(filterText = "") {
+       listEl.innerHTML = "";
+       const lowerFilter = filterText.toLowerCase();
+       const filtered = countryList.filter(c => c.name.toLowerCase().includes(lowerFilter) || c.dial_code.includes(lowerFilter) || c.code.toLowerCase().includes(lowerFilter));
+       
+       filtered.forEach(c => {
+           const li = document.createElement("li");
+           li.innerHTML = `<span>${c.name}</span><strong>${c.dial_code}</strong>`;
+           li.onclick = () => {
+               currentCode = c.dial_code;
+               selectedEl.textContent = currentCode;
+               menuEl.style.display = "none";
+           };
+           listEl.appendChild(li);
+       });
+   }
+   
+   renderList();
+   
+   selectedEl.onclick = () => {
+       menuEl.style.display = menuEl.style.display === "none" ? "flex" : "none";
+       if (menuEl.style.display === "flex") {
+           searchEl.focus();
+       }
+   };
+   
+   searchEl.oninput = (e) => {
+       renderList(e.target.value);
+   };
+   
+   wrapper.addEventListener('click', (e) => {
+      if (!e.target.closest('#geo-custom-dropdown')) {
+          menuEl.style.display = 'none';
+      }
+   });
+
+   let globalDetectedLocation = null;
+   fetch("https://freeipapi.com/api/json")
+       .then(res => res.json())
+       .then(data => {
+           if (data) {
+               globalDetectedLocation = `${data.cityName || 'Unknown'}, ${data.countryName || 'Unknown'}`;
+               if (data.phoneCodes && data.phoneCodes.length > 0) {
+                   currentCode = "+" + data.phoneCodes[0];
+                   selectedEl.textContent = currentCode;
+                   if (!countryList.find(c => c.dial_code === currentCode)) {
+                       countryList.unshift({name: data.countryName || "Auto", code: data.countryCode || "Auto", dial_code: currentCode});
+                       renderList(searchEl.value);
+                   }
+               }
+           }
+       }).catch(()=>{});
+
+   const phoneInputEl = shadow.getElementById("geo-phone-input");
+   if (phoneInputEl) {
+       phoneInputEl.addEventListener("input", (e) => {
+           e.target.value = e.target.value.replace(/\D/g, '');
+       });
+   }
+
    const googleBtn = shadow.getElementById("google-login-btn");
    const loginMsgBox = shadow.getElementById("login-message-box");
 
    googleBtn.onclick = async () => {
+      const phoneInput = shadow.getElementById("geo-phone-input");
+      const phoneVal = phoneInput ? phoneInput.value.trim() : "";
+      const countryCode = currentCode;
+      
+      if (phoneInput && !/^\d{7,15}$/.test(phoneVal)) {
+          loginMsgBox.textContent = "Please enter a valid phone number (between 7 and 15 digits).";
+          loginMsgBox.className = "info-message";
+          loginMsgBox.style.color = "#ff4444";
+          if (phoneInput) phoneInput.style.borderColor = "#ff4444";
+          return;
+      }
+      if (phoneInput) phoneInput.style.borderColor = "var(--border)";
+      
+      const fullPhone = countryCode + phoneVal;
+
       loginMsgBox.textContent = "Connecting to Google...";
       loginMsgBox.className = "info-message success";
+      loginMsgBox.style.color = "";
 
-      const response = await geoLoginGoogle();
+      const response = await geoLoginGoogle(fullPhone);
       if (response && response.success) {
          loginMsgBox.textContent = "Successfully registered! Reloading...";
          setTimeout(() => { location.reload(); }, 1000);
       } else {
          loginMsgBox.textContent = (response && response.error) || "Google sign-in failed.";
          loginMsgBox.className = "info-message";
+         loginMsgBox.style.color = "#ff4444";
       }
    };
 }
@@ -4625,5 +4753,28 @@ function getLeadsCount() {
         }
      });
   }
+
+  // ==========================================
+  // USAGE PING (Triggered on sidepanel load)
+  // ==========================================
+  async function geoPingUsage() {
+     try {
+         const res = await chrome.storage.local.get(['geo_bucket_user_email', 'geo_bucket_google_id', 'geo_bucket_is_valid']);
+         if (res.geo_bucket_user_email && res.geo_bucket_google_id && res.geo_bucket_is_valid) {
+             await fetch(GEO_APP_SCRIPT_URL, {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                 body: JSON.stringify({
+                     action: "ping_usage",
+                     email: res.geo_bucket_user_email,
+                     googleId: res.geo_bucket_google_id,
+                     isNewRun: true
+                 })
+             });
+         }
+     } catch(e) {}
+  }
+  geoPingUsage();
+
 })();
 
