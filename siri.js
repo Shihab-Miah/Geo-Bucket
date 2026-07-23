@@ -96,16 +96,20 @@ antiBlinkStyle.textContent = `
     100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.15), 0 0 30px rgba(239, 68, 68, 0.1); }
   }
   /* Red glow animation for No Website Found text */
-  @keyframes lm-red-glow {
-     0% { text-shadow: 0 0 4px rgba(239, 68, 68, 0.4), 0 0 8px rgba(239, 68, 68, 0.2); }
-     50% { text-shadow: 0 0 12px rgba(239, 68, 68, 0.8), 0 0 20px rgba(239, 68, 68, 0.5); }
-     100% { text-shadow: 0 0 4px rgba(239, 68, 68, 0.4), 0 0 8px rgba(239, 68, 68, 0.2); }
-  }
-  .lm-glow-red {
-     color: #f87171 !important;
-     font-weight: 700 !important;
-     animation: lm-red-glow 2s infinite alternate !important;
-  }
+   /* Discard all fuzzy text-shadow glow blurs globally */
+   *, *::before, *::after {
+     text-shadow: none !important;
+   }
+   @keyframes lm-red-glow {
+      0% { text-shadow: none; }
+      50% { text-shadow: none; }
+      100% { text-shadow: none; }
+   }
+   .lm-glow-red {
+      color: #f87171 !important;
+      font-weight: 700 !important;
+      text-shadow: none !important;
+   }
   /* Subtle red pulse glow for home screen clear button */
   @keyframes lm-pulse-glow-red-subtle {
     0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.1); }
